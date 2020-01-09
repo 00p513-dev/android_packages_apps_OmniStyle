@@ -31,7 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:orientation="vertical"
-            android:background="@drawable/switchbar_background">
+            android:background="@drawable/switchbar_background"
+            android:elevation="4dp" >
 
             <Spinner
                 android:id="@+id/location_select"
@@ -48,7 +49,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             android:layout_weight="1"
             android:clipToPadding="false"
             android:scrollbars="vertical"
-            android:padding="@dimen/activity_horizontal_margin" />
+            android:padding="@dimen/activity_horizontal_margin"
+            android:background="@color/grid_bg_color" />
 
         <TextView
             android:id="@+id/no_network_message"

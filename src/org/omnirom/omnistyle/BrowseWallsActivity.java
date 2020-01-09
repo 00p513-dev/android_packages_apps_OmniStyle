@@ -279,6 +279,7 @@ public class BrowseWallsActivity extends Activity {
         setContentView(R.layout.content_wallpapers);
         mPackageName = getClass().getPackage().getName();
         getActionBar().setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
+        getActionBar().setElevation(0);
 
         mWallpaperList = new ArrayList<WallpaperInfo>();
         mWallpaperUrlList = new ArrayList<RemoteWallpaperInfo>();
