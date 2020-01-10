@@ -288,7 +288,7 @@ public class BrowseWallsActivity extends Activity {
         mNoNetworkMessage = (TextView) findViewById(R.id.no_network_message);
         mProgressBar = (ProgressBar) findViewById(R.id.browse_progress);
 
-        String[] locationList = getResources().getStringArray(R.array.wallpaper_location_list);
+        String[] locationList = getResources().getStringArray(R.array.location_list);
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter(this,
                 R.layout.spinner_item, locationList);
         mLocationSelect.setAdapter(adapter);
