@@ -103,6 +103,7 @@ public class BrowseWallsActivity extends Activity {
     private String mFilterTag;
     private int mSortType = SORT_BY_DEFAULT;
     private MenuItem mMenuItem;
+    private boolean mScrollDisabled;
 
     private static final int PERMISSIONS_REQUEST_EXTERNAL_STORAGE = 0;
 
@@ -324,7 +325,12 @@ public class BrowseWallsActivity extends Activity {
             getAvailableWallpapers();
 
             mWallpaperView = (RecyclerView) findViewById(R.id.wallpaper_images);
-            mWallpaperView.setLayoutManager(new GridLayoutManager(this, 2));
+            mWallpaperView.setLayoutManager(new GridLayoutManager(this, 2) {
+                @Override
+                public boolean canScrollVertically() {
+                    return !mScrollDisabled && super.canScrollVertically();
+                }
+            });
             mWallpaperView.setHasFixedSize(false);
 
             mAdapter = new WallpaperListAdapter();
@@ -335,6 +341,12 @@ public class BrowseWallsActivity extends Activity {
         } catch (Exception e) {
             Log.e(TAG, "init failed", e);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mScrollDisabled = false;
     }
 
     @Override
@@ -454,6 +466,7 @@ public class BrowseWallsActivity extends Activity {
 
         AlertDialog.Builder wallpaperTypeDialog = new AlertDialog.Builder(BrowseWallsActivity.this);
         wallpaperTypeDialog.setTitle(getResources().getString(R.string.wallpaper_type_dialog_title));
+        wallpaperTypeDialog.setCancelable(false);
         wallpaperTypeDialog.setItems(R.array.wallpaper_type_list, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 int wallpaperType = CropExtras.DEFAULT_WALLPAPER_TYPE;
@@ -465,6 +478,11 @@ public class BrowseWallsActivity extends Activity {
                 cropAndSetWallpaperIntent.putExtra(CropExtras.KEY_SET_AS_WALLPAPER, true)
                         .putExtra(CropExtras.KEY_WALLPAPER_TYPE, wallpaperType);
                 startActivityForResult(cropAndSetWallpaperIntent, IMAGE_CROP_AND_SET);
+            }
+        });
+        wallpaperTypeDialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                mScrollDisabled = false;
             }
         });
         AlertDialog d = wallpaperTypeDialog.create();
@@ -551,6 +569,7 @@ public class BrowseWallsActivity extends Activity {
 
         public FetchWallpaperTask(boolean downloadOnly) {
             mDownloadOnly = downloadOnly;
+            mScrollDisabled = true;
         }
 
         @Override
@@ -572,6 +591,7 @@ public class BrowseWallsActivity extends Activity {
             } else {
                 MediaScannerConnection.scanFile(BrowseWallsActivity.this,
                         new String[] { mWallpaperFile }, null, null);
+                mScrollDisabled = false;
             }
         }
     }
@@ -639,6 +659,7 @@ public class BrowseWallsActivity extends Activity {
     private void doSetRemoteWallpaperPost(String wallpaperFile) {
         if (!new File(wallpaperFile).exists()) {
             Toast.makeText(BrowseWallsActivity.this, R.string.download_wallpaper_failed_notice, Toast.LENGTH_LONG).show();
+            mScrollDisabled = false;
             return;
         }
         WallpaperManager wpm = WallpaperManager.getInstance(getApplicationContext());
@@ -651,6 +672,7 @@ public class BrowseWallsActivity extends Activity {
         Bitmap image = BitmapFactory.decodeFile(wallpaperFile);
         if (image == null) {
             Toast.makeText(BrowseWallsActivity.this, R.string.download_wallpaper_failed_notice, Toast.LENGTH_LONG).show();
+            mScrollDisabled = false;
             return;
         }
         final Uri uri = Uri.fromFile(new File(wallpaperFile));
