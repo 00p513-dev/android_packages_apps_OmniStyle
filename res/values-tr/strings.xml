@@ -56,5 +56,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="theme_notification">Bildirim</string>
     <string name="theme_compose">Oluştur</string>
     <string name="button_apply">Uygula</string>
-    <string name="notification_overlay_info">Bildirim yeri değiştirildikten sonra\ntekrar başlatmanız gerekir</string>
+    <string name="notification_overlay_info">Bildirim değiştirildikten sonra\ntekrar başlatmanız gerekir</string>
 </resources>
