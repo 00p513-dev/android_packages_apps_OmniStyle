@@ -31,7 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         android:label="OmniStyle"
         android:icon="@drawable/omnirom_logo"
         android:theme="@style/Theme.OmniStyle"
-        android:requestLegacyExternalStorage="true" >
+        android:requestLegacyExternalStorage="true"
+        android:usesCleartextTraffic="true" >
         <activity
             android:name=".BrowseHeaderActivity"
             android:label="@string/browse_header" >

@@ -18,11 +18,10 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_STATIC_ANDROID_LIBRARIES := android-support-v4 \
-    android-support-v7-cardview \
-    android-support-v7-recyclerview \
-    android-support-v7-gridlayout \
-    android-support-core-ui
+LOCAL_STATIC_ANDROID_LIBRARIES := androidx.core_core \
+    androidx.cardview_cardview \
+    androidx.recyclerview_recyclerview \
+    androidx.gridlayout_gridlayout
 
 LOCAL_STATIC_JAVA_LIBRARIES := lib-picasso-target
 
