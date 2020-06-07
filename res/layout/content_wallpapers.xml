@@ -32,7 +32,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:orientation="vertical"
             android:background="@drawable/switchbar_background"
-            android:elevation="4dp" >
+            android:elevation="4dp"
+            android:visibility="gone" >
 
             <Spinner
                 android:id="@+id/location_select"
