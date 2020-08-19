@@ -74,10 +74,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.omnirom.omnilib.utils.OmniServiceLocator;
+
 public class BrowseWallsActivity extends Activity {
     private static final String TAG = "BrowseWallsActivity";
     private static final String IMAGE_TYPE = "image/*";
     private static final int IMAGE_CROP_AND_SET = 1;
+    // deprecated - used only as fallback
     private static final String WALLPAPER_LIST_URI = "https://dl.omnirom.org/images/wallpapers/thumbs/json_wallpapers_xml.php";
     private static final String WALLPAPER_THUMB_URI = "https://dl.omnirom.org/images/wallpapers/thumbs/";
     private static final String WALLPAPER_FULL_URI = "https://dl.omnirom.org/images/wallpapers/";
@@ -523,10 +526,25 @@ public class BrowseWallsActivity extends Activity {
     }
 
     private List<RemoteWallpaperInfo> getWallpaperList() {
-        String wallData = NetworkUtils.downloadUrlMemoryAsString(WALLPAPER_LIST_URI);
+        String listUrl = OmniServiceLocator.buildWalllpaperQueryUrl(this);
+        if (TextUtils.isEmpty(listUrl)) {
+            listUrl = WALLPAPER_LIST_URI;
+        }
+        String thumbsUrl = WALLPAPER_THUMB_URI;
+        String rootUrl = OmniServiceLocator.buildWalllpaperRootUrl(this);
+        if (TextUtils.isEmpty(rootUrl)) {
+            rootUrl = WALLPAPER_FULL_URI;
+            thumbsUrl = WALLPAPER_THUMB_URI;
+        } else {
+            thumbsUrl = rootUrl + "/thumbs/";
+        }
+
+        Log.d(TAG, "listUrl = " + listUrl + " rootUrl = " + rootUrl + " thumbsUrl = " + thumbsUrl);
+        String wallData = NetworkUtils.downloadUrlMemoryAsString(listUrl);
         if (TextUtils.isEmpty(wallData)) {
             return null;
         }
+
         List<RemoteWallpaperInfo> urlList = new ArrayList<RemoteWallpaperInfo>();
         try {
             JSONArray walls = new JSONArray(wallData);
@@ -555,8 +573,8 @@ public class BrowseWallsActivity extends Activity {
                     if (ext.equals(".png") || ext.equals(".jpg")) {
                         RemoteWallpaperInfo wi = new RemoteWallpaperInfo();
                         wi.mImage = fileName;
-                        wi.mThumbUri = WALLPAPER_THUMB_URI + fileName;
-                        wi.mUri = WALLPAPER_FULL_URI + fileName;
+                        wi.mThumbUri = thumbsUrl + fileName;
+                        wi.mUri = rootUrl + fileName;
                         wi.mCreator = TextUtils.isEmpty(creator) ? EMPTY_CREATOR : creator;
                         wi.mDisplayName = TextUtils.isEmpty(displayName) ? "" : displayName;
                         wi.mTag = TextUtils.isEmpty(tag) ? "" : tag;

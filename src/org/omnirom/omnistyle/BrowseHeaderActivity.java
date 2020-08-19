@@ -70,8 +70,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.omnirom.omnilib.utils.OmniServiceLocator;
+
 public class BrowseHeaderActivity extends Activity {
     private static final String TAG = "BrowseHeaderActivity";
+    // deprecated - used only as fallback
     private static final String HEADERS_LIST_URI = "https://dl.omnirom.org/images/headers/thumbs/json_headers_xml.php";
     private static final String HEADERS_THUMB_URI = "https://dl.omnirom.org/images/headers/thumbs/";
     private static final String HEADERS_FULL_URI = "https://dl.omnirom.org/images/headers/";
@@ -579,10 +582,25 @@ public class BrowseHeaderActivity extends Activity {
     }
 
     private List<RemoteHeaderInfo> getHeadersList() {
-        String headerData = NetworkUtils.downloadUrlMemoryAsString(HEADERS_LIST_URI);
+        String thumbsUrl = HEADERS_THUMB_URI;
+        String rootUrl = OmniServiceLocator.buildHeaderRootUrl(this);
+        if (TextUtils.isEmpty(rootUrl)) {
+            rootUrl = HEADERS_FULL_URI;
+            thumbsUrl = HEADERS_THUMB_URI;
+        } else {
+            thumbsUrl = rootUrl + "/thumbs/";
+        }
+
+        String listUrl = OmniServiceLocator.buildHeaderQueryUrl(this);
+        if (TextUtils.isEmpty(listUrl)) {
+            listUrl = HEADERS_LIST_URI;
+        }
+        Log.d(TAG, "listUrl = " + listUrl + " rootUrl = " + rootUrl + " thumbsUrl = " + thumbsUrl);
+        String headerData = NetworkUtils.downloadUrlMemoryAsString(listUrl);
         if (TextUtils.isEmpty(headerData)) {
             return null;
         }
+
         List<RemoteHeaderInfo> urlList = new ArrayList<RemoteHeaderInfo>();
         try {
             JSONArray headers = new JSONArray(headerData);
@@ -613,8 +631,8 @@ public class BrowseHeaderActivity extends Activity {
                     if (ext.equals(".png") || ext.equals(".jpg")) {
                         RemoteHeaderInfo wi = new RemoteHeaderInfo();
                         wi.mImage = fileName;
-                        wi.mThumbUri = HEADERS_THUMB_URI + fileName;
-                        wi.mUri = HEADERS_FULL_URI + fileName;
+                        wi.mThumbUri = thumbsUrl + fileName;
+                        wi.mUri = rootUrl + fileName;
                         wi.mCreator = TextUtils.isEmpty(creator) ? DEFAULT_CREATOR : creator;
                         wi.mDisplayName = TextUtils.isEmpty(displayName) ? fileName : displayName;
                         wi.mTag = tag;

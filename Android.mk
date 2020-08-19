@@ -39,6 +39,8 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_PRIVATE_PLATFORM_APIS := true
 LOCAL_PROGUARD_FLAG_FILES := proguard.flags
 
+include packages/apps/OmniLib/common.mk
+
 include $(BUILD_PACKAGE)
 
 include $(CLEAR_VARS)
