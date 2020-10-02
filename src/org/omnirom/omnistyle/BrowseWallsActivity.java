@@ -101,7 +101,7 @@ public class BrowseWallsActivity extends Activity {
     private int mWallpaperPreviewSize;
     private Runnable mDoAfter;
     private Spinner mLocationSelect;
-    private int mCurrentLocation = 1;
+    private int mCurrentLocation;
     private TextView mNoNetworkMessage;
     private ProgressBar mProgressBar;
     private String mFilterTag;
@@ -297,6 +297,7 @@ public class BrowseWallsActivity extends Activity {
         String[] locationList = getResources().getStringArray(R.array.location_list);
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter(this,
                 R.layout.spinner_item, locationList);
+        mLocationSelect.setAdapter(adapter);
 
         mLocationSelect.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
             @Override
@@ -345,20 +346,6 @@ public class BrowseWallsActivity extends Activity {
             sortWallpapers();
         } catch (Exception e) {
             Log.e(TAG, "init failed", e);
-        }
-        
-        if (mCurrentLocation == 1) {
-            if (isNetworkAvailable()) {
-                mNoNetworkMessage.setVisibility(View.GONE);
-                mWallpaperView.setAdapter(mAdapterRemote);
-                mProgressBar.setVisibility(View.VISIBLE);
-                FetchWallpaperListTask fetch = new FetchWallpaperListTask();
-                fetch.execute();
-            } else {
-                mNoNetworkMessage.setVisibility(View.VISIBLE);
-            }
-        } else {
-            mLocationSelect.setAdapter(adapter);
         }
     }
 
