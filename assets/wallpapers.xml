@@ -16,8 +16,8 @@
  -->
 
 <wallpapers>
-    <wallpaper image="omni_new1" creator="JayRod" name="Wallpaper 001" />
-    <wallpaper image="omni_new3" creator="JayRod" name="Wallpaper 002"/>
-    <wallpaper image="wall10" creator="JP Kenji" name="Wallpaper 003"/>
-    <wallpaper image="wall16" creator="JP Kenji" name="Wallpaper 004"/>
+    <wallpaper image="wall01" creator="krish_nank" name="Wallpaper 1"/>
+    <wallpaper image="wall02" creator="krish_nank" name="Wallpaper 2"/>
+    <wallpaper image="wall03" creator="krish_nank" name="Wallpaper 3"/>
+    <wallpaper image="wall04" creator="krish_nank" name="Wallpaper 4"/>
 </wallpapers>
